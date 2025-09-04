@@ -1,0 +1,24 @@
+#!/usr/bin/env python3
+"""CLI for checking drug interactions using the FDA API."""
+import argparse
+from services.drug_interactions import check_interaction
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(
+        prog="drug-interactions",
+        description="Check potential interactions between two drugs using the FDA API",
+    )
+    parser.add_argument("drug1", help="Name of the first drug")
+    parser.add_argument("drug2", help="Name of the second drug")
+    args = parser.parse_args()
+
+    result = check_interaction(args.drug1, args.drug2)
+    if result["interaction"]:
+        print(f"Possible interaction found: {result['details']}")
+    else:
+        print(result["details"])
+
+
+if __name__ == "__main__":
+    main()
