@@ -1,0 +1,12 @@
+[
+  {
+    "name": "Firearm License",
+    "expiry_date": "2030-05-30",
+    "email": "officer@example.com"
+  },
+  {
+    "name": "Driving Permit",
+    "expiry_date": "2030-06-15",
+    "email": "employee@example.com"
+  }
+]
