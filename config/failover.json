@@ -1,0 +1,4 @@
+{
+  "payments": ["payments_backup"],
+  "shipping": ["shipping_backup"]
+}
