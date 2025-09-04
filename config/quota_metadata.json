@@ -1,0 +1,4 @@
+{
+    "service1": {"used": 10, "limit": 1000},
+    "service2": {"used": 50, "limit": 500}
+}
