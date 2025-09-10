@@ -1,0 +1,47 @@
+{
+    "name": "Public Records Search",
+    "short_name": "Records Search",
+    "description": "Professional search engine for public records and information - NOT a game",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#f8fafc",
+    "theme_color": "#2c5282",
+    "orientation": "portrait-primary",
+    "scope": "/",
+    "lang": "en-US",
+    "icons": [
+        {
+            "src": "/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "categories": ["productivity", "utilities", "business"],
+    "screenshots": [
+        {
+            "src": "/screenshots/mobile.png",
+            "sizes": "750x1334",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "Mobile search interface"
+        },
+        {
+            "src": "/screenshots/desktop.png",
+            "sizes": "1200x800",
+            "type": "image/png",
+            "form_factor": "wide",
+            "label": "Desktop search interface"
+        }
+    ],
+    "prefer_related_applications": false,
+    "related_applications": [],
+    "edge_side_panel": {
+        "preferred_width": 400
+    }
+}

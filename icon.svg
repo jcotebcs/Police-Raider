@@ -1,0 +1,6 @@
+<svg width="192" height="192" xmlns="http://www.w3.org/2000/svg">
+  <rect width="192" height="192" fill="#2c5282"/>
+  <circle cx="96" cy="86" r="30" stroke="white" stroke-width="6" fill="none"/>
+  <line x1="116" y1="106" x2="136" y2="126" stroke="white" stroke-width="6"/>
+  <text x="96" y="160" text-anchor="middle" fill="white" font-family="Arial" font-size="14" font-weight="bold">SEARCH</text>
+</svg>

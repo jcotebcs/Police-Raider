@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Public Records Search</title>
+    <meta name="description" content="Professional search engine for public records and information">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="styles.css">
+    <meta name="theme-color" content="#2c5282">
+</head>
+<body>
+    <header>
+        <h1>Public Records Search</h1>
+        <p>Professional search engine for first responders and citizens</p>
+    </header>
+    
+    <main>
+        <div class="search-container">
+            <div class="search-box">
+                <input type="search" id="searchInput" placeholder="Enter name, address, or license plate..." autocomplete="off">
+                <button id="searchButton">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                    Search
+                </button>
+            </div>
+            
+            <div class="search-filters">
+                <label><input type="checkbox" value="people" checked> People</label>
+                <label><input type="checkbox" value="criminal"> Criminal Records</label>
+                <label><input type="checkbox" value="property"> Property</label>
+                <label><input type="checkbox" value="vehicle"> Vehicle Records</label>
+            </div>
+        </div>
+        
+        <div id="results" class="results-container">
+            <div class="welcome-message">
+                <h2>Welcome to Public Records Search</h2>
+                <p>Enter a search term above to find public records, contact information, and other relevant data.</p>
+                <div class="features">
+                    <div class="feature">
+                        <h3>🔍 Fast Search</h3>
+                        <p>Search across multiple databases simultaneously</p>
+                    </div>
+                    <div class="feature">
+                        <h3>📱 Mobile Ready</h3>
+                        <p>Works on phones, tablets, and desktop computers</p>
+                    </div>
+                    <div class="feature">
+                        <h3>🔒 Secure</h3>
+                        <p>Professional-grade security for sensitive searches</p>
+                    </div>
+                    <div class="feature">
+                        <h3>⚡ Offline Capable</h3>
+                        <p>View cached results even without internet connection</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="offline-status" class="status-bar hidden">
+            ⚠️ Offline Mode - Limited Data Available
+        </div>
+    </main>
+    
+    <footer>
+        <p>&copy; 2024 Public Records Search - Professional Search Tool</p>
+    </footer>
+    
+    <script src="app.js"></script>
+</body>
+</html>
