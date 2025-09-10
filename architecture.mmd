@@ -1,0 +1,62 @@
+graph TB
+    subgraph "Client Layer"
+        A[Web Browser] --> B[Static Files]
+        A --> C[Police Raider Frontend]
+    end
+    
+    subgraph "Application Layer"
+        C --> D[Express.js Server]
+        D --> E[Rate Limiter]
+        E --> F[CORS & Security Headers]
+        F --> G[Input Validation]
+        G --> H[API Routes]
+    end
+    
+    subgraph "Business Logic"
+        H --> I[Crime Controller]
+        H --> J[Health Controller]
+        I --> K[API Client Factory]
+    end
+    
+    subgraph "Data Adapters"
+        K --> L{API Mode Check}
+        L -->|mock| M[Mock RapidAPI Client]
+        L -->|staging/prod| N[Real RapidAPI Client]
+        N --> O[External Crime APIs]
+        M --> P[Mock Crime Data]
+    end
+    
+    subgraph "Infrastructure"
+        D --> Q[Winston Logger]
+        D --> R[Error Handler]
+        Q --> S[Log Files]
+        R --> T[Structured Errors]
+    end
+    
+    subgraph "Security Layer"
+        U[Environment Variables] --> K
+        V[.env File] --> U
+        W[GitHub Secrets] --> U
+        X[API Keys] --> U
+    end
+    
+    subgraph "External Services"
+        O --> Y[RapidAPI Crime Data]
+        O --> Z[Government Crime APIs]
+    end
+    
+    subgraph "Development & CI/CD"
+        AA[GitHub Repository] --> BB[GitHub Actions]
+        BB --> CC[Automated Tests]
+        BB --> DD[Security Scanning]
+        BB --> EE[Docker Build]
+        EE --> FF[Container Registry]
+    end
+    
+    style A fill:#e1f5fe
+    style O fill:#fff3e0
+    style U fill:#f3e5f5
+    style M fill:#e8f5e8
+    style N fill:#fff8e1
+    style Q fill:#fce4ec
+    style BB fill:#f1f8e9

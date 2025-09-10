@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Police Raider - Crime Data Search</title>
+    <meta name="description" content="Search and analyze crime data in your area">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Police Raider</h1>
+        <p>Crime Data Search & Analysis</p>
+    </header>
+
+    <main>
+        <section class="search-section">
+            <h2>Search Crime Data</h2>
+            <form id="searchForm">
+                <div class="form-group">
+                    <label for="location">Location:</label>
+                    <input 
+                        type="text" 
+                        id="location" 
+                        name="location" 
+                        required 
+                        placeholder="Enter city, neighborhood, or address"
+                        maxlength="100"
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label for="crimeType">Crime Type (optional):</label>
+                    <select id="crimeType" name="crimeType">
+                        <option value="">All Crime Types</option>
+                        <option value="theft">Theft</option>
+                        <option value="assault">Assault</option>
+                        <option value="vandalism">Vandalism</option>
+                        <option value="burglary">Burglary</option>
+                        <option value="fraud">Fraud</option>
+                        <option value="drug">Drug Offense</option>
+                    </select>
+                </div>
+                
+                <button type="submit" id="searchBtn">Search</button>
+            </form>
+        </section>
+
+        <section class="status-section">
+            <div id="statusInfo" class="status-info"></div>
+        </section>
+
+        <section class="results-section">
+            <div id="loadingSpinner" class="loading hidden">
+                <div class="spinner"></div>
+                <p>Searching crime data...</p>
+            </div>
+            
+            <div id="results" class="results hidden">
+                <h3>Search Results</h3>
+                <div id="resultsContainer"></div>
+            </div>
+            
+            <div id="error" class="error hidden">
+                <h3>Error</h3>
+                <p id="errorMessage"></p>
+            </div>
+        </section>
+
+        <section class="incident-details">
+            <div id="incidentDetails" class="incident-details-container hidden">
+                <h3>Incident Details</h3>
+                <div id="incidentContent"></div>
+                <button id="closeDetails" class="close-btn">Close Details</button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Police Raider. Crime data for informational purposes only.</p>
+        <p class="disclaimer">
+            This application uses mock data for demonstration purposes. 
+            Real crime data requires proper API configuration.
+        </p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
