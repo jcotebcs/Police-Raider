@@ -1,0 +1,251 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f5f5f5;
+}
+
+header {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    color: white;
+    text-align: center;
+    padding: 2rem 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+header p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+main {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.search-section {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+.search-section h2 {
+    margin-bottom: 1.5rem;
+    color: #1e3c72;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #555;
+}
+
+input[type="text"], select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus, select:focus {
+    outline: none;
+    border-color: #2a5298;
+}
+
+button {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    color: white;
+    padding: 0.75rem 2rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+button:hover {
+    transform: translateY(-2px);
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.status-info {
+    background: #e8f4fd;
+    border: 1px solid #bee5eb;
+    border-radius: 4px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.loading {
+    text-align: center;
+    padding: 2rem;
+}
+
+.spinner {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #2a5298;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.results {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.result-item {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.result-item:hover {
+    border-color: #2a5298;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.result-header {
+    display: flex;
+    justify-content: between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.incident-id {
+    font-weight: bold;
+    color: #1e3c72;
+}
+
+.crime-type {
+    background: #f8f9fa;
+    padding: 0.25rem 0.5rem;
+    border-radius: 3px;
+    font-size: 0.85rem;
+    margin-left: auto;
+}
+
+.severity-high { border-left: 4px solid #dc3545; }
+.severity-medium { border-left: 4px solid #ffc107; }
+.severity-low { border-left: 4px solid #28a745; }
+
+.incident-details-container {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-top: 2rem;
+}
+
+.detail-row {
+    display: flex;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #eee;
+}
+
+.detail-label {
+    font-weight: 600;
+    width: 150px;
+    color: #555;
+}
+
+.detail-value {
+    flex: 1;
+}
+
+.close-btn {
+    background: #6c757d;
+    margin-top: 1rem;
+}
+
+.error {
+    background: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+    padding: 1rem;
+    border-radius: 4px;
+    margin: 1rem 0;
+}
+
+.hidden {
+    display: none !important;
+}
+
+footer {
+    background: #333;
+    color: white;
+    text-align: center;
+    padding: 2rem 0;
+    margin-top: 3rem;
+}
+
+.disclaimer {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    margin-top: 0.5rem;
+}
+
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 2rem;
+    }
+    
+    main {
+        margin: 1rem auto;
+        padding: 0 0.5rem;
+    }
+    
+    .search-section, .results, .incident-details-container {
+        padding: 1rem;
+    }
+    
+    .detail-row {
+        flex-direction: column;
+    }
+    
+    .detail-label {
+        width: auto;
+        margin-bottom: 0.25rem;
+    }
+}

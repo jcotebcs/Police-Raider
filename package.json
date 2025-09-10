@@ -1,0 +1,45 @@
+{
+  "name": "police-raider",
+  "version": "1.0.0",
+  "description": "Police Raider - Crime Data Search Application",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "test": "jest --forceExit --detectOpenHandles",
+    "test:watch": "jest --watch",
+    "lint": "eslint src/",
+    "lint:fix": "eslint src/ --fix",
+    "audit": "npm audit",
+    "build": "echo 'No build step required for Node.js'",
+    "health": "curl -f http://localhost:3000/health || exit 1"
+  },
+  "keywords": ["police", "crime", "data", "search", "api"],
+  "author": "Police Raider Team",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.19.2",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "express-rate-limit": "^7.4.0",
+    "dotenv": "^16.4.5",
+    "axios": "^1.7.7",
+    "express-validator": "^7.2.0",
+    "winston": "^3.14.2",
+    "compression": "^1.7.4"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0",
+    "eslint": "^8.57.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.6.0",
+    "nodemon": "^3.1.4"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  }
+}
