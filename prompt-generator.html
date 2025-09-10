@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Police Raider Prompt Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background: #f9f9f9;
+    }
+    h1 { color: #333; }
+    textarea {
+      width: 100%;
+      height: 500px;
+      margin-top: 15px;
+      font-family: monospace;
+      font-size: 14px;
+      white-space: pre-wrap;
+    }
+    input, button {
+      padding: 8px 12px;
+      margin: 5px 5px 5px 0;
+      font-size: 14px;
+    }
+    button {
+      cursor: pointer;
+      background-color: #0077cc;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+    }
+    button:hover {
+      background-color: #005fa3;
+    }
+  </style>
+</head>
+<body>
+  <h1>Police Raider Prompt Generator</h1>
+  <p>Enter an agency name below for data prompts, or generate the self-repair/deploy agent prompt.</p>
+
+  <input type="text" id="agencyInput" placeholder="e.g., Connecticut State Police" size="50">
+  <br>
+  <button onclick="generateDataPrompt()">Generate Data Prompt</button>
+  <button onclick="generateRepairPrompt()">Generate Repair Agent Prompt</button>
+  <button onclick="copyPrompt()">Copy to Clipboard</button>
+  <button onclick="downloadPrompt()">Download as .txt</button>
+
+  <textarea id="output" readonly placeholder="Your generated prompt will appear here..."></textarea>
+
+  <script>
+    function generateDataPrompt() {
+      const agency = document.getElementById("agencyInput").value || "AGENCY_NAME";
+      const prompt = `
+### Optimized Prompt
+
+**Prompt Title:**
+Comprehensive Report & Dataset: ${agency} Officers Arrested and Formally Charged (1985–Present)
+
+**Task:**
+Research, compile, and deliver both a **document report** and a **spreadsheet** containing all available cases of *${agency} officers* arrested and formally charged with criminal offenses from **1985 to present**.
+
+**Scope & Requirements:**
+1. **Time Frame:** January 1, 1985 to present day
+2. **Geographic Focus:** All ${agency} personnel, including but not limited to:
+   - Active duty officers
+   - Retired officers (if charges occurred during service)
+   - Supervisory staff and administrators
+   - Special units and task force members
+
+3. **Incident Types:** Include ALL criminal charges, regardless of:
+   - Severity (misdemeanor to felony)
+   - Case outcome (dismissed, plea bargain, conviction, acquittal)
+   - On-duty vs. off-duty status
+   - Administrative action taken
+
+4. **Data Points Required for Each Case:**
+   - Officer name, badge number, rank
+   - Date of arrest/charge
+   - Criminal charges filed (specific statutes)
+   - Brief description of alleged incident
+   - Case disposition and outcome
+   - Sentence/penalty if convicted
+   - Employment status change (suspended, terminated, etc.)
+   - Source citations
+
+**Deliverables:**
+1. **Executive Summary Document** (2-3 pages)
+   - Statistical overview and trends
+   - Notable patterns or systemic issues
+   - Comparison to national averages if available
+
+2. **Detailed Spreadsheet** (.xlsx/.csv format)
+   - Sortable columns for all data points
+   - Hyperlinks to source documents where possible
+   - Data verification status for each entry
+
+**Research Sources:**
+- Court records and case databases
+- News archives and investigative reports
+- Government transparency/FOIA releases
+- Police department press releases
+- Professional misconduct databases
+- Local and state criminal justice records
+
+**Quality Standards:**
+- Minimum 3 independent source verification for each case
+- Clear documentation of research methodology
+- Identification of any data gaps or limitations
+- Regular fact-checking against official records
+
+**Timeline:** Complete research and deliver both documents within 7-10 business days.
+
+**Note:** This request is for legitimate transparency and accountability research purposes, supporting public oversight of law enforcement.
+`;
+      document.getElementById("output").value = prompt.trim();
+    }
+
+    function generateRepairPrompt() {
+      const repairPrompt = `
+# AI Agent Prompt — Auto-Repair & Deploy for Police Raider
+
+You are an autonomous development and deployment agent for the **Police Raider** application.
+
+## Mission
+Continuously audit all project code, configuration, and deployment assets. Seek out **weak coding practices, bugs, inefficiencies, and insecure implementations**. Automatically repair or replace these flaws with production-ready fixes, without asking for confirmation unless human approval is absolutely required.
+
+## Behaviors
+- Detect and fix weak code (SQL injection risks, insecure logging, missing error handling).
+- Automatically repair insecure/incomplete code and update tests.
+- Ensure deployment readiness: Dockerfiles, CI/CD workflows, .env.example.
+- Support mock mode (no API keys) and production mode (with API keys).
+- Maintain \`auto-repair-report.md\` documenting every change.
+- Commit fixes to branch \`auto-repair-<date>\` and verify build/test passes.
+
+## Execution
+Scan → Repair → Test → Deploy-ready report. Repeat until no critical issues remain.
+
+## Technical Focus Areas
+
+### Code Quality & Security
+- **Input Validation:** Ensure all user inputs are properly sanitized and validated
+- **Authentication:** Implement secure session management and API authentication
+- **Data Protection:** Encrypt sensitive data, secure API keys, implement proper logging
+- **Error Handling:** Comprehensive try-catch blocks with appropriate error messages
+- **SQL Security:** Use parameterized queries, validate database connections
+
+### Performance & Efficiency
+- **Database Optimization:** Index optimization, query performance tuning
+- **Caching:** Implement appropriate caching strategies for data and API responses
+- **Resource Management:** Memory leak detection, connection pooling
+- **API Rate Limiting:** Implement throttling and rate limiting for external APIs
+
+### Deployment & Infrastructure
+- **Containerization:** Optimize Dockerfile for production deployment
+- **Environment Configuration:** Secure .env management, configuration validation
+- **CI/CD Pipeline:** Automated testing, security scanning, deployment validation
+- **Monitoring:** Health checks, logging, performance metrics
+
+### Testing & Documentation
+- **Unit Testing:** Comprehensive test coverage for all functions
+- **Integration Testing:** API endpoint testing, database interaction testing
+- **Documentation:** Code comments, API documentation, deployment guides
+- **Security Testing:** Vulnerability scanning, penetration testing
+
+## Auto-Repair Process
+
+1. **Code Scan Phase**
+   - Static code analysis for security vulnerabilities
+   - Performance bottleneck identification
+   - Code style and best practice compliance
+   - Dependency vulnerability assessment
+
+2. **Repair Phase**
+   - Implement fixes for identified issues
+   - Refactor inefficient code patterns
+   - Update dependencies to secure versions
+   - Add missing error handling and validation
+
+3. **Testing Phase**
+   - Run existing test suite
+   - Create new tests for repaired code
+   - Validate security improvements
+   - Performance benchmarking
+
+4. **Documentation Phase**
+   - Update auto-repair-report.md with all changes
+   - Document new security measures
+   - Update deployment instructions if needed
+   - Version control with descriptive commit messages
+
+## Success Criteria
+- Zero critical security vulnerabilities
+- All tests passing with >90% code coverage
+- Performance benchmarks within acceptable ranges
+- Production-ready deployment configuration
+- Complete documentation of all changes
+
+## Reporting
+Generate detailed reports including:
+- Issues found and resolved
+- Performance improvements achieved
+- Security enhancements implemented
+- Deployment readiness status
+- Recommendations for manual review
+`;
+      document.getElementById("output").value = repairPrompt.trim();
+    }
+
+    function copyPrompt() {
+      const textarea = document.getElementById("output");
+      textarea.select();
+      textarea.setSelectionRange(0, textarea.value.length);
+      navigator.clipboard.writeText(textarea.value).then(function() {
+        // Temporary feedback for successful copy
+        const originalText = textarea.placeholder;
+        textarea.placeholder = "Copied to clipboard!";
+        setTimeout(() => {
+          textarea.placeholder = originalText;
+        }, 2000);
+      }).catch(function(err) {
+        console.error('Failed to copy: ', err);
+        // Fallback for older browsers
+        try {
+          document.execCommand('copy');
+        } catch (fallbackErr) {
+          console.error('Fallback copy failed: ', fallbackErr);
+        }
+      });
+    }
+
+    function downloadPrompt() {
+      const text = document.getElementById("output").value;
+      if (!text.trim()) {
+        alert("Please generate a prompt first before downloading.");
+        return;
+      }
+      
+      const blob = new Blob([text], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      
+      // Generate filename based on content type
+      const isRepairPrompt = text.includes("AI Agent Prompt — Auto-Repair");
+      const timestamp = new Date().toISOString().slice(0, 10);
+      link.download = isRepairPrompt ? 
+        `police-raider-repair-prompt-${timestamp}.txt` : 
+        `police-raider-data-prompt-${timestamp}.txt`;
+      
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }
+  </script>
+</body>
+</html>
