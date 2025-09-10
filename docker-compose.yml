@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  police-raider:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - DB_TYPE=sqlite
+      - DB_PATH=/usr/src/app/data/police-raider.db
+      - JWT_SECRET=${JWT_SECRET:-change-this-in-production}
+      - LOG_LEVEL=info
+    volumes:
+      - police_raider_data:/usr/src/app/data
+      - police_raider_logs:/usr/src/app/logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # PostgreSQL for production use (optional)
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: police_raider
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      POSTGRES_DB: police_raider
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    profiles:
+      - postgres
+
+  # Redis for caching (optional)
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    profiles:
+      - redis
+
+  # Nginx reverse proxy (optional)
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - police-raider
+    restart: unless-stopped
+    profiles:
+      - nginx
+
+volumes:
+  police_raider_data:
+  police_raider_logs:
+  postgres_data:
+  redis_data:
