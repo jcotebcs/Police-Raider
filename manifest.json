@@ -1,0 +1,95 @@
+{
+  "name": "Public Service Search - Police Raider",
+  "short_name": "Police Raider",
+  "description": "Search public services, emergency contacts, and police stations",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#667eea",
+  "theme_color": "#1976d2",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en-US",
+  "categories": ["government", "utilities", "safety"],
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' fill='%231976d2' rx='24'/><text x='50%' y='50%' font-size='120' text-anchor='middle' dominant-baseline='middle'>🚔</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' fill='%231976d2' rx='64'/><text x='50%' y='50%' font-size='320' text-anchor='middle' dominant-baseline='middle'>🚔</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 144 144'><rect width='144' height='144' fill='%231976d2' rx='18'/><text x='50%' y='50%' font-size='90' text-anchor='middle' dominant-baseline='middle'>🚔</text></svg>",
+      "sizes": "144x144",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><rect width='96' height='96' fill='%231976d2' rx='12'/><text x='50%' y='50%' font-size='60' text-anchor='middle' dominant-baseline='middle'>🚔</text></svg>",
+      "sizes": "96x96",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 72 72'><rect width='72' height='72' fill='%231976d2' rx='9'/><text x='50%' y='50%' font-size='45' text-anchor='middle' dominant-baseline='middle'>🚔</text></svg>",
+      "sizes": "72x72",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><rect width='48' height='48' fill='%231976d2' rx='6'/><text x='50%' y='50%' font-size='30' text-anchor='middle' dominant-baseline='middle'>🚔</text></svg>",
+      "sizes": "48x48",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Emergency Search",
+      "short_name": "Emergency",
+      "description": "Quick search for emergency services",
+      "url": "/?type=emergency",
+      "icons": [
+        {
+          "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><rect width='96' height='96' fill='%23d32f2f' rx='12'/><text x='50%' y='50%' font-size='60' text-anchor='middle' dominant-baseline='middle'>🚨</text></svg>",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Police Search",
+      "short_name": "Police",
+      "description": "Find police stations and services",
+      "url": "/?type=police",
+      "icons": [
+        {
+          "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><rect width='96' height='96' fill='%231976d2' rx='12'/><text x='50%' y='50%' font-size='60' text-anchor='middle' dominant-baseline='middle'>👮</text></svg>",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 540 720'><rect width='540' height='720' fill='%23667eea'/><rect x='20' y='20' width='500' height='680' fill='white' rx='10'/><text x='270' y='80' font-size='24' text-anchor='middle' fill='%231976d2'>🚔 Public Service Search</text><rect x='40' y='120' width='460' height='40' fill='%23f5f5f5' rx='5'/><rect x='40' y='180' width='460' height='400' fill='%23fafafa' rx='5'/></svg>",
+      "sizes": "540x720",
+      "type": "image/svg+xml",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 768'><rect width='1024' height='768' fill='%23667eea'/><rect x='50' y='50' width='924' height='668' fill='white' rx='10'/><text x='512' y='120' font-size='32' text-anchor='middle' fill='%231976d2'>🚔 Public Service Search</text><rect x='100' y='180' width='824' height='60' fill='%23f5f5f5' rx='5'/><rect x='100' y='280' width='824' height='400' fill='%23fafafa' rx='5'/></svg>",
+      "sizes": "1024x768",
+      "type": "image/svg+xml",
+      "form_factor": "wide"
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
+}

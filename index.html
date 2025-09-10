@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Public Service Search - Police Raider</title>
+    <meta name="description" content="Search public services and emergency contacts">
+    <meta name="theme-color" content="#1976d2">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Icons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚔</text></svg>">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <header class="header">
+            <h1>🚔 Public Service Search</h1>
+            <p>Find emergency services, police stations, and public assistance</p>
+        </header>
+
+        <main class="main">
+            <div class="search-container">
+                <div class="search-form">
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        class="search-input"
+                        placeholder="Search for services, locations, or departments..."
+                        autocomplete="off"
+                    >
+                    <select id="serviceType" class="service-type">
+                        <option value="all">All Services</option>
+                        <option value="police">Police Stations</option>
+                        <option value="emergency">Emergency Services</option>
+                        <option value="public">Public Offices</option>
+                        <option value="people">Personnel Directory</option>
+                    </select>
+                    <button id="searchBtn" class="search-btn">
+                        <span class="search-icon">🔍</span>
+                        Search
+                    </button>
+                </div>
+            </div>
+
+            <div id="loadingIndicator" class="loading hidden">
+                <div class="spinner"></div>
+                <p>Searching...</p>
+            </div>
+
+            <div id="errorMessage" class="error-message hidden">
+                <p></p>
+            </div>
+
+            <div id="resultsContainer" class="results-container">
+                <div id="resultsCount" class="results-count hidden"></div>
+                <div id="results" class="results"></div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>Emergency: Call 911 | Non-Emergency: Contact your local department</p>
+            <div class="install-prompt" id="installPrompt" style="display: none;">
+                <button id="installBtn" class="install-btn">📱 Install App</button>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="app.js"></script>
+    <script>
+        // Register service worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch(registrationError => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+{
+  "name": "police-raider",
+  "version": "1.0.0",
+  "description": "Public Service Search Progressive Web App",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx http-server . -p 3000 -o",
+    "dev": "npx http-server . -p 3000 -o -c-1",
+    "build": "echo 'No build step required for static PWA'",
+    "test": "echo 'No tests configured yet'",
+    "lint": "echo 'No linting configured yet'",
+    "serve": "npx serve . -p 3000"
+  },
+  "keywords": [
+    "pwa",
+    "progressive-web-app",
+    "public-service",
+    "police",
+    "emergency",
+    "search"
+  ],
+  "author": "Police Raider Team",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jcotebcs/Police-Raider.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jcotebcs/Police-Raider/issues"
+  },
+  "homepage": "https://github.com/jcotebcs/Police-Raider#readme"
+}
