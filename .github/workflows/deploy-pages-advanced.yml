@@ -1,0 +1,383 @@
+name: Deploy Pages (Advanced)
+
+on:
+  # This workflow is designed for more complex deployment scenarios
+  push:
+    branches: [ main, master, develop ]
+    paths-ignore:
+      - 'docs/**'
+      - '**.md'
+  
+  pull_request:
+    branches: [ main, master ]
+    types: [ opened, synchronize, reopened ]
+  
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - staging
+          - preview
+      force_rebuild:
+        description: 'Force rebuild even if no changes detected'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+  pull-requests: write  # For PR comments
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Global environment variables
+  NODE_VERSION: '18'
+  PYTHON_VERSION: '3.11'
+  RUBY_VERSION: '3.1'
+
+jobs:
+  # Pre-flight checks
+  preflight:
+    runs-on: ubuntu-latest
+    outputs:
+      should_deploy: ${{ steps.changes.outputs.should_deploy }}
+      deploy_env: ${{ steps.env.outputs.deploy_env }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check for changes
+        id: changes
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ] && [ "${{ github.event.inputs.force_rebuild }}" == "true" ]; then
+            echo "should_deploy=true" >> $GITHUB_OUTPUT
+            echo "🔄 Force rebuild requested"
+          elif [ "${{ github.event_name }}" == "pull_request" ]; then
+            echo "should_deploy=false" >> $GITHUB_OUTPUT
+            echo "🔍 PR detected - skipping deployment"
+          else
+            # Check if there are relevant changes
+            if git diff --quiet HEAD~1 HEAD -- . ':!README.md' ':!docs/' ':!*.md'; then
+              echo "should_deploy=false" >> $GITHUB_OUTPUT
+              echo "📝 No relevant changes detected"
+            else
+              echo "should_deploy=true" >> $GITHUB_OUTPUT
+              echo "🚀 Changes detected - proceeding with deployment"
+            fi
+          fi
+
+      - name: Determine environment
+        id: env
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "deploy_env=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
+          elif [ "${{ github.ref }}" == "refs/heads/main" ] || [ "${{ github.ref }}" == "refs/heads/master" ]; then
+            echo "deploy_env=production" >> $GITHUB_OUTPUT
+          elif [ "${{ github.ref }}" == "refs/heads/develop" ]; then
+            echo "deploy_env=staging" >> $GITHUB_OUTPUT
+          else
+            echo "deploy_env=preview" >> $GITHUB_OUTPUT
+          fi
+
+  # Enhanced build job with caching and optimization
+  build:
+    needs: preflight
+    if: needs.preflight.outputs.should_deploy == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # Add matrix strategy for testing multiple configurations if needed
+        include:
+          - build_type: "standard"
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          lfs: true  # Enable Git LFS if needed
+
+      - name: Setup build cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.npm
+            ~/.cache/pip
+            ~/.gem
+            node_modules
+            .next/cache
+            .nuxt
+            dist
+            build
+          key: ${{ runner.os }}-build-${{ hashFiles('**/package-lock.json', '**/requirements.txt', '**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-build-
+
+      - name: Enhanced project detection
+        id: detect
+        run: |
+          # More sophisticated project detection
+          echo "🔍 Analyzing project structure..."
+          
+          # Framework detection
+          if [ -f "next.config.js" ] || [ -f "next.config.mjs" ]; then
+            echo "framework=nextjs" >> $GITHUB_OUTPUT
+            echo "⚛️ Next.js detected"
+          elif [ -f "nuxt.config.js" ] || [ -f "nuxt.config.ts" ]; then
+            echo "framework=nuxtjs" >> $GITHUB_OUTPUT
+            echo "💚 Nuxt.js detected"
+          elif [ -f "vue.config.js" ] || grep -q "vue" package.json 2>/dev/null; then
+            echo "framework=vue" >> $GITHUB_OUTPUT
+            echo "💚 Vue.js detected"
+          elif grep -q "react" package.json 2>/dev/null; then
+            echo "framework=react" >> $GITHUB_OUTPUT
+            echo "⚛️ React detected"
+          elif [ -f "angular.json" ]; then
+            echo "framework=angular" >> $GITHUB_OUTPUT
+            echo "🅰️ Angular detected"
+          elif [ -f "svelte.config.js" ]; then
+            echo "framework=svelte" >> $GITHUB_OUTPUT
+            echo "🔥 Svelte detected"
+          else
+            echo "framework=static" >> $GITHUB_OUTPUT
+            echo "📄 Static site detected"
+          fi
+          
+          # Build tool detection
+          if [ -f "vite.config.js" ] || [ -f "vite.config.ts" ]; then
+            echo "build_tool=vite" >> $GITHUB_OUTPUT
+            echo "⚡ Vite detected"
+          elif [ -f "webpack.config.js" ]; then
+            echo "build_tool=webpack" >> $GITHUB_OUTPUT
+            echo "📦 Webpack detected"
+          elif [ -f "rollup.config.js" ]; then
+            echo "build_tool=rollup" >> $GITHUB_OUTPUT
+            echo "🎯 Rollup detected"
+          else
+            echo "build_tool=default" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Setup Node.js with caching
+        if: contains(steps.detect.outputs.framework, 'js') || steps.detect.outputs.framework == 'react' || steps.detect.outputs.framework == 'vue' || steps.detect.outputs.framework == 'angular' || steps.detect.outputs.framework == 'svelte'
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies with retry
+        if: contains(steps.detect.outputs.framework, 'js') || steps.detect.outputs.framework == 'react' || steps.detect.outputs.framework == 'vue' || steps.detect.outputs.framework == 'angular' || steps.detect.outputs.framework == 'svelte'
+        run: |
+          # Retry logic for npm install
+          for i in 1 2 3; do
+            if [ -f "package-lock.json" ]; then
+              npm ci && break
+            elif [ -f "yarn.lock" ]; then
+              yarn install --frozen-lockfile && break
+            elif [ -f "pnpm-lock.yaml" ]; then
+              npm install -g pnpm
+              pnpm install --frozen-lockfile && break
+            else
+              npm install && break
+            fi
+            echo "Attempt $i failed, retrying..."
+            sleep 5
+          done
+
+      - name: Framework-specific build
+        run: |
+          case "${{ steps.detect.outputs.framework }}" in
+            "nextjs")
+              echo "🏗️ Building Next.js application..."
+              npm run build
+              npm run export 2>/dev/null || echo "Export not available, using build output"
+              ;;
+            "nuxtjs")
+              echo "🏗️ Building Nuxt.js application..."
+              npm run generate || npm run build
+              ;;
+            "vue")
+              echo "🏗️ Building Vue.js application..."
+              npm run build
+              ;;
+            "react")
+              echo "🏗️ Building React application..."
+              npm run build
+              ;;
+            "angular")
+              echo "🏗️ Building Angular application..."
+              npm run build -- --prod --base-href=/
+              ;;
+            "svelte")
+              echo "🏗️ Building Svelte application..."
+              npm run build
+              ;;
+            *)
+              echo "🏗️ Building with detected build tool..."
+              if npm run | grep -q "build"; then
+                npm run build
+              else
+                echo "No build script found, using static files"
+              fi
+              ;;
+          esac
+
+      - name: Optimize build output
+        run: |
+          echo "🎯 Optimizing build output..."
+          
+          # Determine output directory
+          if [ -d "dist" ]; then
+            BUILD_DIR="./dist"
+          elif [ -d "build" ]; then
+            BUILD_DIR="./build"
+          elif [ -d "out" ]; then
+            BUILD_DIR="./out"
+          elif [ -d "_site" ]; then
+            BUILD_DIR="./_site"
+          elif [ -d "public" ]; then
+            BUILD_DIR="./public"
+          else
+            BUILD_DIR="./"
+          fi
+          
+          echo "build_output=$BUILD_DIR" >> $GITHUB_ENV
+          
+          # Create .nojekyll file if it doesn't exist (for GitHub Pages)
+          if [ ! -f "$BUILD_DIR/.nojekyll" ]; then
+            touch "$BUILD_DIR/.nojekyll"
+            echo "📝 Created .nojekyll file"
+          fi
+          
+          # Add build info
+          echo "{
+            \"build_time\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",
+            \"commit\": \"${{ github.sha }}\",
+            \"branch\": \"${{ github.ref_name }}\",
+            \"environment\": \"${{ needs.preflight.outputs.deploy_env }}\"
+          }" > "$BUILD_DIR/build-info.json"
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ env.build_output }}
+
+  # Deploy job with environment protection
+  deploy:
+    needs: [preflight, build]
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ needs.preflight.outputs.deploy_env }}
+      url: ${{ steps.deployment.outputs.page_url }}
+    
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Update deployment status
+        if: always()
+        run: |
+          if [ "${{ steps.deployment.outcome }}" == "success" ]; then
+            echo "✅ Deployment to ${{ needs.preflight.outputs.deploy_env }} successful!"
+            echo "🌐 URL: ${{ steps.deployment.outputs.page_url }}"
+          else
+            echo "❌ Deployment failed"
+            exit 1
+          fi
+
+  # Comprehensive post-deployment checks
+  verify:
+    needs: [preflight, deploy]
+    runs-on: ubuntu-latest
+    if: always() && needs.deploy.result == 'success'
+    
+    steps:
+      - name: Comprehensive health check
+        run: |
+          URL="${{ needs.deploy.outputs.page_url }}"
+          echo "🔍 Performing comprehensive health check for: $URL"
+          
+          # Wait for deployment to propagate
+          echo "⏳ Waiting for deployment to propagate..."
+          sleep 60
+          
+          # Basic connectivity test
+          for i in {1..5}; do
+            if curl -f -s -o /dev/null "$URL"; then
+              echo "✅ Site is accessible (attempt $i)"
+              break
+            else
+              echo "⏳ Waiting for site to become accessible (attempt $i/5)..."
+              sleep 30
+            fi
+          done
+          
+          # Check for common files
+          echo "🔍 Checking for common files..."
+          curl -s "$URL" | grep -q "<title>" && echo "✅ HTML title found" || echo "⚠️ No HTML title found"
+          curl -f -s -o /dev/null "$URL/build-info.json" && echo "✅ Build info accessible" || echo "ℹ️ Build info not found"
+
+      - name: Performance check
+        run: |
+          URL="${{ needs.deploy.outputs.page_url }}"
+          echo "⚡ Running basic performance check..."
+          
+          # Measure response time
+          RESPONSE_TIME=$(curl -w '%{time_total}' -s -o /dev/null "$URL")
+          echo "📊 Response time: ${RESPONSE_TIME}s"
+          
+          # Check if response time is reasonable (less than 5 seconds)
+          if (( $(echo "$RESPONSE_TIME < 5.0" | bc -l) )); then
+            echo "✅ Response time is good"
+          else
+            echo "⚠️ Response time is slow"
+          fi
+
+  # PR comment with deployment info
+  comment:
+    needs: [preflight, deploy]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && always()
+    
+    steps:
+      - name: Comment PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo, number } = context.issue;
+            const deploymentStatus = '${{ needs.deploy.result }}';
+            const deploymentUrl = '${{ needs.deploy.outputs.page_url }}';
+            
+            let message = '## 🚀 Deployment Status\n\n';
+            
+            if (deploymentStatus === 'success') {
+              message += `✅ **Deployment successful!**\n\n`;
+              message += `📄 **Preview URL:** ${deploymentUrl}\n\n`;
+              message += `🔧 **Environment:** ${{ needs.preflight.outputs.deploy_env }}\n`;
+              message += `📝 **Commit:** \`${{ github.sha }}\`\n`;
+            } else {
+              message += `❌ **Deployment failed**\n\n`;
+              message += `Please check the [workflow run](https://github.com/${owner}/${repo}/actions/runs/${{ github.run_id }}) for details.\n`;
+            }
+            
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number: number,
+              body: message
+            });

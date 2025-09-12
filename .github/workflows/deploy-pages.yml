@@ -1,0 +1,223 @@
+name: Deploy to GitHub Pages
+
+on:
+  # Runs on pushes targeting the default branch
+  push:
+    branches: 
+      - main
+      - master
+  
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  # Build job
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for better Git information
+
+      - name: Detect project type and setup environment
+        id: detect
+        run: |
+          echo "Detecting project type..."
+          
+          # Check for Node.js project
+          if [ -f "package.json" ]; then
+            echo "node_project=true" >> $GITHUB_OUTPUT
+            echo "📦 Node.js project detected"
+          else
+            echo "node_project=false" >> $GITHUB_OUTPUT
+          fi
+          
+          # Check for Python project
+          if [ -f "requirements.txt" ] || [ -f "pyproject.toml" ] || [ -f "setup.py" ]; then
+            echo "python_project=true" >> $GITHUB_OUTPUT
+            echo "🐍 Python project detected"
+          else
+            echo "python_project=false" >> $GITHUB_OUTPUT
+          fi
+          
+          # Check for Jekyll
+          if [ -f "_config.yml" ] || [ -f "Gemfile" ]; then
+            echo "jekyll_project=true" >> $GITHUB_OUTPUT
+            echo "💎 Jekyll project detected"
+          else
+            echo "jekyll_project=false" >> $GITHUB_OUTPUT
+          fi
+          
+          # Check for Hugo
+          if [ -f "config.yaml" ] || [ -f "config.yml" ] || [ -f "config.toml" ]; then
+            echo "hugo_project=true" >> $GITHUB_OUTPUT
+            echo "⚡ Hugo project detected"
+          else
+            echo "hugo_project=false" >> $GITHUB_OUTPUT
+          fi
+          
+          # Determine build directory
+          if [ -d "dist" ]; then
+            echo "build_dir=./dist" >> $GITHUB_OUTPUT
+            echo "📁 Using dist directory"
+          elif [ -d "build" ]; then
+            echo "build_dir=./build" >> $GITHUB_OUTPUT
+            echo "📁 Using build directory"
+          elif [ -d "_site" ]; then
+            echo "build_dir=./_site" >> $GITHUB_OUTPUT
+            echo "📁 Using _site directory"
+          elif [ -d "public" ]; then
+            echo "build_dir=./public" >> $GITHUB_OUTPUT
+            echo "📁 Using public directory"
+          else
+            echo "build_dir=./" >> $GITHUB_OUTPUT
+            echo "📁 Using root directory"
+          fi
+
+      - name: Setup Node.js
+        if: steps.detect.outputs.node_project == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Setup Python
+        if: steps.detect.outputs.python_project == 'true'
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+          cache: 'pip'
+
+      - name: Setup Ruby (for Jekyll)
+        if: steps.detect.outputs.jekyll_project == 'true'
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.1'
+          bundler-cache: true
+
+      - name: Setup Hugo
+        if: steps.detect.outputs.hugo_project == 'true'
+        uses: peaceiris/actions-hugo@v2
+        with:
+          hugo-version: 'latest'
+          extended: true
+
+      - name: Install Node.js dependencies
+        if: steps.detect.outputs.node_project == 'true'
+        run: |
+          if [ -f "package-lock.json" ]; then
+            npm ci
+          elif [ -f "yarn.lock" ]; then
+            yarn install --frozen-lockfile
+          elif [ -f "pnpm-lock.yaml" ]; then
+            npm install -g pnpm
+            pnpm install --frozen-lockfile
+          else
+            npm install
+          fi
+
+      - name: Install Python dependencies
+        if: steps.detect.outputs.python_project == 'true'
+        run: |
+          if [ -f "requirements.txt" ]; then
+            pip install -r requirements.txt
+          fi
+          if [ -f "pyproject.toml" ]; then
+            pip install -e .
+          fi
+
+      - name: Build Node.js project
+        if: steps.detect.outputs.node_project == 'true'
+        run: |
+          # Try common build scripts
+          if npm run | grep -q "build"; then
+            npm run build
+          elif npm run | grep -q "dist"; then
+            npm run dist
+          elif npm run | grep -q "compile"; then
+            npm run compile
+          else
+            echo "⚠️ No build script found, skipping build step"
+          fi
+
+      - name: Build Jekyll site
+        if: steps.detect.outputs.jekyll_project == 'true'
+        run: bundle exec jekyll build
+
+      - name: Build Hugo site
+        if: steps.detect.outputs.hugo_project == 'true'
+        run: hugo --minify
+
+      - name: Build Python project
+        if: steps.detect.outputs.python_project == 'true'
+        run: |
+          # Add custom Python build steps here if needed
+          echo "🐍 Python project build (customize as needed)"
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ steps.detect.outputs.build_dir }}
+
+  # Deployment job
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  # Post-deployment verification
+  verify:
+    runs-on: ubuntu-latest
+    needs: deploy
+    if: always()
+    steps:
+      - name: Verify deployment
+        run: |
+          echo "🚀 Deployment completed!"
+          echo "📄 Site URL: ${{ needs.deploy.outputs.page_url }}"
+          
+          # Optional: Add health check
+          if [ -n "${{ needs.deploy.outputs.page_url }}" ]; then
+            echo "🔍 Performing basic health check..."
+            # Wait a moment for deployment to propagate
+            sleep 30
+            
+            # Basic HTTP check
+            if curl -f -s -o /dev/null "${{ needs.deploy.outputs.page_url }}"; then
+              echo "✅ Site is accessible"
+            else
+              echo "⚠️ Site may not be immediately accessible (this is normal for first deployments)"
+            fi
+          fi
+
+      - name: Deployment status
+        if: always()
+        run: |
+          if [ "${{ needs.deploy.result }}" == "success" ]; then
+            echo "✅ Deployment successful!"
+          else
+            echo "❌ Deployment failed"
+            exit 1
+          fi
