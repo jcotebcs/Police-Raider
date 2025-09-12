@@ -1,0 +1,4 @@
+/* Police-Raider App Styles */
+.app-container {
+  @apply min-h-screen bg-gradient-to-br from-blue-950 via-blue-900 to-indigo-900;
+}

@@ -1,0 +1,100 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    margin: 0;
+    min-width: 320px;
+    min-height: 100vh;
+  }
+}
+
+@layer components {
+  .code-preview {
+    font-family: 'Fira Code', 'Monaco', 'Cascadia Code', 'Ubuntu Mono', monospace;
+  }
+  
+  .syntax-comment {
+    @apply text-gray-400 italic;
+  }
+  
+  .syntax-keyword {
+    @apply text-purple-400 font-semibold;
+  }
+  
+  .syntax-type {
+    @apply text-emerald-400;
+  }
+  
+  .syntax-string {
+    @apply text-amber-400;
+  }
+  
+  .syntax-number {
+    @apply text-blue-400;
+  }
+  
+  .syntax-decorator {
+    @apply text-pink-400;
+  }
+  
+  .md-header {
+    @apply text-blue-400 font-bold;
+  }
+  
+  .md-bold {
+    @apply text-yellow-400 font-bold;
+  }
+  
+  .md-italic {
+    @apply text-purple-300 italic;
+  }
+  
+  .md-code {
+    @apply text-emerald-300 bg-black bg-opacity-30 px-1 py-0.5 rounded;
+  }
+  
+  .md-code-block {
+    @apply text-emerald-300 bg-black bg-opacity-30 p-2 rounded block my-2;
+  }
+  
+  .md-list {
+    @apply text-yellow-400;
+  }
+  
+  .md-link {
+    @apply text-blue-400 underline;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-800 rounded;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-blue-600 rounded hover:bg-blue-500;
+}
+
+/* Focus styles */
+button:focus,
+input:focus,
+textarea:focus {
+  @apply outline-none ring-2 ring-blue-500 ring-opacity-50;
+}
