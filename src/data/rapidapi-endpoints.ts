@@ -10,7 +10,7 @@ export interface RapidAPIEndpoint {
   method: string;
   headers: Record<string, string>;
   parameters: APIParameter[];
-  response: any;
+  response: Record<string, unknown>;
 }
 
 export interface APIParameter {

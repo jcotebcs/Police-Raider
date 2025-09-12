@@ -2,8 +2,7 @@ import JSZip from 'jszip';
 import type { GeneratedCode } from './codeGenerator';
 
 export async function createZipFile(
-  generatedCode: GeneratedCode,
-  _projectName: string = 'police-raider-api-client'
+  generatedCode: GeneratedCode
 ): Promise<Blob> {
   const zip = new JSZip();
 
@@ -125,7 +124,7 @@ export function copyToClipboard(text: string): Promise<void> {
   return navigator.clipboard.writeText(text);
 }
 
-export function formatCode(code: string, _language: string = 'typescript'): string {
+export function formatCode(code: string): string {
   // Basic code formatting - in a real implementation, you'd use a proper formatter
   const lines = code.split('\n');
   let indentLevel = 0;

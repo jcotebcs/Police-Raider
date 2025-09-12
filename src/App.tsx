@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Download, Shield, Code, Copy, ExternalLink, Github } from 'lucide-react';
 import { POLICE_RAIDER_APIS, API_CATEGORIES } from './data/rapidapi-endpoints';
-import { generateTypeScript } from './utils/codeGenerator';
+import { generateTypeScript, type GeneratedCode } from './utils/codeGenerator';
 import { createZipFile, downloadZip, copyToClipboard } from './utils/fileUtils';
 import APISelector from './components/APISelector';
 import CodePreview from './components/CodePreview';
@@ -9,16 +9,12 @@ import './App.css';
 
 function App() {
   const [selectedAPIs, setSelectedAPIs] = useState(POLICE_RAIDER_APIS);
-  const [generatedCode, setGeneratedCode] = useState<any>(null);
+  const [generatedCode, setGeneratedCode] = useState<GeneratedCode | null>(null);
   const [activeTab, setActiveTab] = useState('types');
   const [isGenerating, setIsGenerating] = useState(false);
   const [copySuccess, setCopySuccess] = useState('');
 
-  useEffect(() => {
-    generateCode();
-  }, [selectedAPIs]);
-
-  const generateCode = async () => {
+  const generateCode = useCallback(async () => {
     setIsGenerating(true);
     try {
       const code = generateTypeScript(selectedAPIs);
@@ -28,7 +24,11 @@ function App() {
     } finally {
       setIsGenerating(false);
     }
-  };
+  }, [selectedAPIs]);
+
+  useEffect(() => {
+    generateCode();
+  }, [generateCode]);
 
   const handleDownload = async () => {
     if (!generatedCode) return;
@@ -131,7 +131,7 @@ function App() {
                   </div>
                 )}
                 <button
-                  onClick={() => generatedCode && handleCopy(generatedCode[activeTab])}
+                  onClick={() => generatedCode && handleCopy(generatedCode[activeTab as keyof GeneratedCode])}
                   className="absolute top-4 right-4 p-2 text-blue-300 hover:text-white hover:bg-blue-800/50 rounded transition-colors z-10"
                   title="Copy to clipboard"
                 >
@@ -144,7 +144,7 @@ function App() {
                   </div>
                 ) : generatedCode ? (
                   <CodePreview
-                    code={generatedCode[activeTab]}
+                    code={generatedCode[activeTab as keyof GeneratedCode]}
                     language={activeTab === 'readme' ? 'markdown' : 'typescript'}
                   />
                 ) : (
