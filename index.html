@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Police Raider</title>
+    <meta name="description" content="Police Raider - GitHub Pages Deployment Demo">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            color: white;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        
+        .badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            margin: 0.25rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        .features {
+            background: white;
+            border-radius: 15px;
+            padding: 3rem;
+            margin: 2rem 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .features h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #333;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .feature {
+            padding: 1.5rem;
+            border-radius: 10px;
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+        }
+        
+        .feature h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+        
+        .status {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .status-indicator {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #28a745;
+            display: inline-block;
+            margin-right: 0.5rem;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: white;
+            opacity: 0.8;
+        }
+        
+        .build-info {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 2rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .features {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <h1>🚔 Police Raider</h1>
+            <p>Successfully deployed with GitHub Pages!</p>
+            <div>
+                <span class="badge">✅ Automated Deployment</span>
+                <span class="badge">🚀 GitHub Actions</span>
+                <span class="badge">📦 Multi-Framework Support</span>
+            </div>
+        </div>
+        
+        <div class="features">
+            <h2>🛠️ Deployment Features</h2>
+            <div class="feature-grid">
+                <div class="feature">
+                    <h3>🔍 Auto-Detection</h3>
+                    <p>Automatically detects your project type and framework, configuring the build process accordingly.</p>
+                </div>
+                <div class="feature">
+                    <h3>⚡ Fast Builds</h3>
+                    <p>Optimized build process with caching and parallel processing for quick deployments.</p>
+                </div>
+                <div class="feature">
+                    <h3>🌍 Multi-Environment</h3>
+                    <p>Support for production, staging, and preview environments with proper configuration.</p>
+                </div>
+                <div class="feature">
+                    <h3>🔒 Secure</h3>
+                    <p>Built-in security features with minimal permissions and token management.</p>
+                </div>
+                <div class="feature">
+                    <h3>📊 Monitoring</h3>
+                    <p>Comprehensive health checks and performance monitoring for reliable deployments.</p>
+                </div>
+                <div class="feature">
+                    <h3>🛡️ Robust</h3>
+                    <p>Error handling, retry logic, and comprehensive verification ensure deployment success.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="status">
+            <h2>📈 Deployment Status</h2>
+            <p>
+                <span class="status-indicator"></span>
+                <strong>Live and Running</strong>
+            </p>
+            <p>Your GitHub Pages site is successfully deployed and accessible!</p>
+            
+            <div class="build-info">
+                <h3>📋 Build Information</h3>
+                <div id="build-info">
+                    <p>🕒 Build Time: <span id="build-time">Loading...</span></p>
+                    <p>📝 Commit: <span id="commit">Loading...</span></p>
+                    <p>🌿 Branch: <span id="branch">Loading...</span></p>
+                    <p>🌍 Environment: <span id="environment">Loading...</span></p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>🚀 Powered by GitHub Actions & GitHub Pages</p>
+            <p>Built with the robust deployment workflows</p>
+        </div>
+    </div>
+    
+    <script>
+        // Load build information if available
+        fetch('./build-info.json')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('build-time').textContent = new Date(data.build_time).toLocaleString();
+                document.getElementById('commit').textContent = data.commit.substring(0, 7);
+                document.getElementById('branch').textContent = data.branch;
+                document.getElementById('environment').textContent = data.environment;
+            })
+            .catch(() => {
+                // Fallback if build-info.json is not available
+                document.getElementById('build-time').textContent = 'Not available';
+                document.getElementById('commit').textContent = 'Not available';
+                document.getElementById('branch').textContent = 'Not available';
+                document.getElementById('environment').textContent = 'Not available';
+            });
+        
+        // Add some interactive elements
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate feature cards on scroll
+            const features = document.querySelectorAll('.feature');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.transform = 'translateY(0)';
+                        entry.target.style.opacity = '1';
+                    }
+                });
+            });
+            
+            features.forEach(feature => {
+                feature.style.transform = 'translateY(20px)';
+                feature.style.opacity = '0';
+                feature.style.transition = 'all 0.6s ease';
+                observer.observe(feature);
+            });
+        });
+    </script>
+</body>
+</html>
